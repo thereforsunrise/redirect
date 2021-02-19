@@ -1,0 +1,23 @@
+version: '3'
+services:
+  redirect:
+    image: morbz/docker-web-redirect
+    restart: always
+    environment:
+      VIRTUAL_HOST: thereforsunrise.com
+      REDIRECT_TARGET:  www.thereforsunrise.com
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.redirect.entrypoints=websecure"
+      - "traefik.http.routers.redirect.rule=Host(`thereforsunrise.com`)"
+      - "traefik.http.routers.redirect.tls=true"
+      - "traefik.http.services.redirect.loadbalancer.server.port=8080"
+    restart: always
+    networks:
+      - web
+
+networks:
+  web:
+    external:
+      name: myproxy_webgateway
